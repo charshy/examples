@@ -1,14 +1,16 @@
-# Amalgam8 Examples
+# Amalgam8 examples
 
-Sample microservice-based applications and local sandbox environment for Amalgam8.
-An overview of Amalgam8 can be found at www.amalgam8.io.
+Sample microservice-based applications and local sandbox environment for Amalgam8. www.amalgam8.io.
 
 ## Overview <a id="overview"></a>
 
-This project includes a number of Amalgam8 sample programs, scripts and a preconfigured environment to allow
+This project includes 2 Amalgam8 sample programs, scripts and a preconfigured environment to allow
 you to easily run, build, and experiment with the provided samples, in several environments.
 In addition, the scripts are generic enough that you can easily deploy
 the samples to other environments as well.
+
+ +This project includes 2 Amalgam8 sample apps with a preconfigured environment to allow
++you to easily run, build, and experiment with the provided samples, or for you to use your own ideas.
 
 The following samples are available for Amalgam8:
 
