@@ -2,13 +2,16 @@
 
 ## Overview
 
-The bookinfo sample is a simple application that implements a web page that displays information about a book, 
+The bookinfo sample contains an application for a web page that displays information about a book, 
 similar to a single catalog entry of an online book store. Displayed on the page is a description of the book,
-book details (ISBN, number of pages, and so on), and a few book reviews.
+book details (ISBN, number of pages, and so on), and a few book reviews. The bookinfo sample provides an example to experiment with the following amalgam8 features:
+
+* Middle-tier routing: internal microservices being able to call each other, while still being independent in the logical structure for high-availability.
+* Edge service routing: an API gateway manages the incoming traffic and routes it to the internal microservices.
 
 The sample application is broken into four separate microservices:
 
-* *productpage*. The productpage microservice calls the *details* and *reviews* microservices to populate the page. It provides a good example to experiment with both mid-tier and edge service routing.
+* *productpage*. The productpage microservice calls the *details* and *reviews* microservices to populate the page.
 * *details*. The details microservice contains book information.
 * *reviews*. The reviews microservice contains book reviews. It also calls the *ratings* microservice, to provide two levels of downstream mid-tier routing.
 * *ratings*. The ratings microservice contains book ranking information that accompanies a book review. 
@@ -21,14 +24,12 @@ There are 3 versions of the reviews microservice:
 
 ![Microservice dependencies](https://github.com/amalgam8/examples/blob/master/apps/bookinfo/dependencies.jpg)
 
-## Running the bookinfo demo
+Follow the steps for this sample to use the Amalgam8 control plane to demonstrate the following capabilities:
 
-In this demo, we will use Amalgam8's control plane to accomplish the following tasks:
+1. Route traffic to specific versions of microservices using the `a8ctl` CLI that interacts with the Amalgam8 control plane (controller and registry).
 
-1. Route traffic to specific versions of microservices using the `a8ctl`
-   command line client that interacts with the A8 Control Plane.
-2. Exercise the resiliency testing capabilities in Amalgam8 using the
-   Gremlin framework to conduct systematic resilience testing, i.e., inject
+2. Conduct systematic resiliency testing in Amalgam8 by using the
+   Gremlin framework. i.e., inject
    reproducible failure scenarios and run automated assertions on recovery
    behavior of the microservices. Specifically,
    * (Ad-hoc approach) Inject failures in the call path between two
@@ -41,6 +42,12 @@ In this demo, we will use Amalgam8's control plane to accomplish the following t
 3. Exercise the version routing capabilities in Amalgam8 by gradually
    increasing traffic from an old to a new version of an internal
    microservice.
+
+
+
+## Running the bookinfo sample
+
+
 
 Before you begin, follow the environment set up instructions at https://github.com/amalgam8/examples/blob/master/README.md
 
