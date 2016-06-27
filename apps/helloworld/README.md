@@ -5,7 +5,7 @@
 The helloworld sample starts two versions of a helloworld microservice, to demonstrate how Amalgam8 can be used to split 
 incoming traffic between the two versions. You can define the proportion of traffic to each microservice as a percentage.
 
-## Running the helloworld demo
+## Running the helloworld sample
 
 Before you begin, follow the environment set up instructions at https://github.com/amalgam8/examples/blob/master/README.md
 
@@ -15,7 +15,7 @@ Before you begin, follow the environment set up instructions at https://github.c
     a8ctl service-list
     ```
     
-    The expected output is the following:
+    The expected output is the following table:
     
     ```
     +------------+--------------+
@@ -55,10 +55,10 @@ Before you begin, follow the environment set up instructions at https://github.c
     curl http://localhost:32000/helloworld/hello
     ```
 
-    **Note**: Replace GATEWAY_URL above with the appropriate URL of the gateway
-    for your environment (for example, http://localhost:32000, http://192.168.33.33:32000, etc.).
+    **Note**: Replace http://localhost:32000 above with the appropriate URL of the gateway
+    for your environment. For example, http://192.168.33.33:32000.
 
-    You can see that the traffic is continually routed between the v1 instances only, in a round-robin fashion:
+    You can see that the traffic is continually routed between the v1 instances only, in a round-robin configuration:
 
     ```
     $ curl http://localhost:32000/helloworld/hello
@@ -72,9 +72,9 @@ Before you begin, follow the environment set up instructions at https://github.c
     ...
     ```
 
-1. Next, we will split traffic between helloworld v1 and v2
+Next, split traffic so thart it is routed between both helloworld v1 and helloworld v2.
 
-    Run the following command to send 25% of the traffic to helloworld v2, leaving the rest (75%) on v1:
+1. Run the following command to send 25% of the traffic to helloworld v2, leaving the rest (75%) on v1:
     
     ```
     a8ctl route-set helloworld --default v1 --selector 'v2(weight=0.25)'
@@ -107,17 +107,19 @@ Before you begin, follow the environment set up instructions at https://github.c
 
 ## Using the Amalgam8 REST API
 
-You can look at registration details for a service in the A8 registry, by running the following cURL command:
+Use the API to view your configuration of the helloworld sample:
+
+1. View the registration details for a service in the Amalgam8 registry, by running the following cURL command:
 
 ```
 export TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NjY3NzU5NjMsIm5hbWVzcGFjZSI6Imdsb2JhbC5nbG9iYWwifQ.Gbz4G_O0OfJZiTuX6Ce4heU83gSWQLr5yyiA7eZNqdY
 curl -X GET -H "Authorization: Bearer ${TOKEN}" http://localhost:31300/api/v1/services/helloworld | jq .
 ```
 
-**Note**: Replace localhost:31300 above with the appropriate host
-for your environment (for example, "a8-registry.mybluemix.net", etc.).
+**Note**: Replace localhost:31300 in the example code with the appropriate host
+for your environment. For example, "a8-registry.mybluemix.net".
 
-The output should look something like this:
+The returned output resembles this following example:
 
 ```
 {
@@ -179,16 +181,16 @@ The output should look something like this:
 }
 ```
 
-To list the routes for a service, run the following cURL command:
+2. List the routes for a service by running the following cURL command:
 
 ```
 curl http://localhost:31200/v1/tenants/local/versions/helloworld | jq .
 ```
 
 **Note**: Replace localhost:31200 above with the appropriate host
-for your environment (for example, "a8-controller.mybluemix.net", etc.).
+for your environment. For example, "a8-controller.mybluemix.net".
 
-After running the demo, the output should be as follows:
+After following the sample steps, the following output is displayed:
 
 ```
 {
@@ -198,7 +200,7 @@ After running the demo, the output should be as follows:
 }
 ```
 
-You can also set routes using the REST API. For example, to send all traffic to v2, run the following curl command:
+3. Try setting the microservice routing by using the Amalgam8 REST API. For example, to send all traffic to v2, run the following cURL command:
 
 ```
 curl -X PUT http://localhost:31200/v1/tenants/local/versions/helloworld -d '{"default": "v2"}' -H "Content-Type: application/json"
