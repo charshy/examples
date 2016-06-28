@@ -4,26 +4,21 @@ Sample microservice-based applications and local sandbox environment for Amalgam
 
 ## Overview <a id="overview"></a>
 
-This project includes 2 Amalgam8 sample programs, scripts and a preconfigured environment to allow
-you to easily run, build, and experiment with the provided samples, in several environments.
-In addition, the scripts are generic enough that you can easily deploy
-the samples to other environments as well.
-
- +This project includes 2 Amalgam8 sample apps with a preconfigured environment to allow
-+you to easily run, build, and experiment with the provided samples, or for you to use your own ideas.
+This project includes 2 Amalgam8 sample apps, scripts, and a preconfigured environment to allow you to easily run, build, and experiment with the provided samples. The scripts are designed to be generic, so that you can easily deploy the samples to other environments.
 
 The following samples are available for Amalgam8:
 
-* [Helloworld](https://github.com/amalgam8/examples/blob/master/apps/helloworld/README.md) is a single microservice app that demonstrates how to route traffic to different versions of the same microservice
-* [Bookinfo](https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md) is a multiple microservice app used to demonstrate and experiment with several Amalgam8 features
+* [Helloworld](https://github.com/amalgam8/examples/blob/master/apps/helloworld/README.md) is a single microservice app that demonstrates how to route traffic to different versions of the same microservice.
+* [Bookinfo](https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md) is a multiple microservice app used to demonstrate and experiment with several Amalgam8 features, including routing and resilience testing.
 
-The repository's root directory includes a Vagrant file that provides an environment with everything 
-needed to run, and build, the samples
+The repository's root directory includes a Vagrant file that provides an environment with everything needed to run and build the samples:
 ([Go](http://golang.org/), [Docker](http://www.docker.com/), [Kubernetes](http://kubernetes.io/),
 [Amalgam8 CLI](https://github.com/amalgam8/controller/tree/master/cli), [Gremlin SDK](https://github.com/ResilienceTesting/gremlinsdk-python))
-already installed. Depending on the runtime environement you want to try, using it may be the easiest way to get Amalgam8 up and running.
+Depending on the runtime environment you want to try, using the Vagrant file might be the easiest way to get Amalgam8 up and running.
 
-To run the demos, proceed to the instructions corresponding to the environment that you want to use:
+## Running the samples <a id="running"</a>
+
+To run the sample apps, follow the steps that correspond to the environment that you want to use:
 
 * Localhost Deployment
     * [Docker](#local-docker)
@@ -33,27 +28,25 @@ To run the demos, proceed to the instructions corresponding to the environment t
     * [IBM Bluemix](#bluemix)
     * [Google Compute Cloud](#gcp)
 
-If you'd like to also be able to change and compile the code, or build the images,
-refer the [Developer Instructions](https://github.com/amalgam8/examples/blob/master/development.md).
-
+If you'd like to be able to change and compile the code, or build the images, refer to the [Developer Instructions](https://github.com/amalgam8/examples/blob/master/development.md).
 
 ## Amalgam8 with Docker - local environment <a id="local-docker"></a>
 
-To run in a local docker environemnt, you can either use the Vagrant sandbox or install the
+To run in a local Docker environment, you can either use the Vagrant sandbox, or install the
 [Amalgam8 python CLI](https://pypi.python.org/pypi/a8ctl),
 [Docker 1.10 or later](https://docs.docker.com/engine/installation/) and
 [Docker Compose 1.5.1 or later](https://docs.docker.com/compose/install/).
 
-The installation steps below have been tested with the Vagrant sandbox
+The installation steps below were tested with the Vagrant sandbox
 environment (based on Ubuntu 14.04) as well as with Docker for Mac Beta
-(v1.11.2-beta15 or later). These steps have not been tested on Docker for
+(v1.11.2-beta15 or later versions). These steps are not tested on Docker for
 Windows Beta.
 
 The following instructions assume that you are using the Vagrant
-environment. Where appropriate, environment specific instructions are
+environment. Where appropriate, environment-specific instructions are
 provided.
 
-1. Clone the Amalgam8 examples repo and then start the Vagrant environment (or install and setup the equivalent dependencies manually)
+1. Clone the Amalgam8 examples repo and then start the Vagrant environment:
 
     ```bash
     git clone git@github.com:amalgam8/examples.git
@@ -65,9 +58,15 @@ provided.
     cd $GOPATH/src/github.com/amalgam8/examples
     ```
 
-1. Start the multi-tenant control plane and a tenant
+   If you are not using the Vagrant file, then you must download and install the following technologies for your environment:
 
-    Start the control plane services (registry and controller) by running the
+  * [Go](http://golang.org/),
+  * [Docker](http://www.docker.com/)
+  * [Kubernetes](http://kubernetes.io/)
+  * [Amalgam8 CLI](https://github.com/amalgam8/controller/tree/master/cli)
+  * [Gremlin SDK](https://github.com/ResilienceTesting/gremlinsdk-python)
+
+1. Start the control plane services (registry and controller) by running the
     following command:
 
     ```bash
@@ -75,40 +74,36 @@ provided.
     ```
 
     The above command also creates a tenant named "local" in the
-    control plane. 
+    control plane.
 
-1. Before we start using the `a8ctl` command line utility, we need to set
-   the `A8_CONTROLLER_URL` and the `A8_REGISTRY_URL` environment variables
-   to point to the addresses of the controller and the registry respectively.
+1. Set the `A8_CONTROLLER_URL` and `A8_REGISTRY_URL` environment variables to point to the addresses of the controller and registry.
 
-    * If you are running the Docker setup using the Vagrant file in the
-    `examples` folder or if you are running Docker locally (on Linux or
-    Docker for Mac Beta)
+        * If you are running Docker by using the Vagrant file in the
+        `examples` folder, or if you are running Docker locally (on Linux or
+        Docker for Mac Beta), run the following commands:
 
-    ```bash
-    export A8_CONTROLLER_URL=http://localhost:31200
-    export A8_REGISTRY_URL=http://localhost:31300
-    ```
+        ```bash
+        export A8_CONTROLLER_URL=http://localhost:31200
+        export A8_REGISTRY_URL=http://localhost:31300
+        ```
 
-    * If you are running Docker using the Docker Toolbox with Docker Machine,
-    then set the environment variables to the IP address of the VM created
-    by Docker Machine. For example, assuming you have only one Docker
-    Machine running on your system, the following commands will setup the
-    appropriate environment variables:
+        * If you are running Docker by using the Docker Toolbox with Docker Machine,
+        then set the environment variables to the IP address of the VM that is created
+        by Docker Machine. For example, with only one Docker
+        Machine running on your system, run the following commands, replacing `docker-machine ip` with the IP address of the VM:
 
     ```bash
     export A8_CONTROLLER_URL=`docker-machine ip`
     export A8_REGISTRY_URL=`docker-machine ip`
     ```
 
-1.  Confirm everything is working with the following command:
+1.  Confirm that the control plane services are working correctly by running the following command:
 
     ```bash
     a8ctl service-list
     ```
 
-    The command shouldn't return any services, since we haven't started any yet, 
-    but if it returns the following empty table, the control plane services (and CLI) are working as expected:
+    If the control plane services and Amalgam8 CLI are working as expected, the following empty table is returned as output.
 
     ```
     +---------+-----------+
@@ -117,36 +112,22 @@ provided.
     +---------+-----------+
     ```
 
-1. Deploy the API gateway
+    Note that no services are listed, because we have not yet started any.
 
-    Every tenant application should have
-    an [API Gateway](http://microservices.io/patterns/apigateway.html) that
-    provides a single user-facing entry point for a microservices-based
-    application.  You can control the Amalgam8 gateway for different purposes,
-    such as version routing, red/black deployments, canary testing, resiliency
-    testing, and so on. The Amalgam8 gateway is a simple lightweight Nginx
-    server that is controlled by the control plane.
-
-
-    To start the API gateway, run the following command:
+1. Start the API gateway by running the following command:
 
     ```bash
     docker-compose -f docker/gateway.yaml up -d
     ```
 
-    Usually, the API gateway is mapped to a DNS route. However, in our local
-    standalone environment, you can access it at port 32000 on localhost.
-    If you are using Docker directly, then the gateway should be
-    accessible at http://localhost:32000 or http://dockermachineip:32000.
+    Usually, the API gateway is mapped to a DNS route. However, in this local
+    standalone environment, you can access it at http://localhost:32000.
 
 1. Confirm that the API gateway is running by accessing
-    http://localhost:32000 from your browser.
-    If all is well, you should see a simple **Welcome to nginx!**
-    page in your browser.
+    ```http://localhost:32000``` from your browser.
 
-    **Note:** You only need one gateway per tenant. A single gateway can front more
-    than one application under the tenant at the same time, so long as they
-    don't implement any conflicting microservices.
+    If the API gateway is running correctly, the **Welcome to nginx!**
+    page opens in your browser.
 
 1. Follow the instructions for the sample that you want to run.
 
@@ -159,11 +140,11 @@ provided.
     docker-compose -f docker/helloworld.yaml scale helloworld-v1=2
     docker-compose -f docker/helloworld.yaml scale helloworld-v2=2
     ```
-        
+
     * Follow the instructions at https://github.com/amalgam8/examples/blob/master/apps/helloworld/README.md
 
     * To shutdown the helloworld instances, run the following commands:
-   
+
     ```bash
     docker-compose -f docker/helloworld.yaml kill
     docker-compose -f docker/helloworld.yaml rm -f
@@ -172,7 +153,7 @@ provided.
     (b) **bookinfo** sample
 
     * Start the bookinfo application:
-    
+
     ```bash
     docker-compose -f docker/bookinfo.yaml up -d
     ```
@@ -180,13 +161,13 @@ provided.
     * Follow the instructions at https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md
 
     * To shutdown the bookinfo instances, run the following commands:
-    
+
     ```
     docker-compose -f docker/bookinfo.yaml kill
     docker-compose -f docker/bookinfo.yaml rm -f
     ```
 
-    When you are finished, shut down the gateway and control plane servers by running the following commands:
+    When you are finished, shut down the API gateway and control plane servers by running the following command:
 
     ```
     docker/cleanup.sh
@@ -194,13 +175,13 @@ provided.
 
 ## Amalgam8 with Kubernetes - local environment <a id="local-k8s"></a>
 
-The following setup has been tested with Kubernetes v1.2.3.
+The following installation steps were tested with Kubernetes v1.2.3.
 
-1. Clone the Amalgam8 examples repo and then start the Vagrant environment (or install and setup the equivalent dependencies manually)
+1. Clone the Amalgam8 examples repo and then start the Vagrant environment:
 
     ```bash
     git clone git@github.com:amalgam8/examples.git
-    
+
     cd examples
     vagrant up
     vagrant ssh
@@ -209,88 +190,87 @@ The following setup has been tested with Kubernetes v1.2.3.
     export A8_CONTROLLER_URL=http://localhost:31200
     export A8_REGISTRY_URL=http://localhost:31300
     ```
-    
-    Start Kubernetes, by running the following command:
-    
+
+1. Install Kubernetes by running the following command:
+
     ```bash
     sudo kubernetes/install-kubernetes.sh
     ```
 
-    **Note:** If you stopped a previous Vagrant VM and restarted it, Kubernetes might be started already, but in a bad state.
-    If you have problems, first start by uninstalling Kubernetes with the following command: 
-      
+    If you stopped a previous Vagrant VM and restarted it, Kubernetes might be started already, but in a bad state.
+    If you have problems, uninstall Kubernetes and repeat the install. You can uninstall Kubernetes by using the following command:
+
     ```bash
     sudo kubernetes/uninstall-kubernetes.sh
     ```
-    
+
 1. Start the local control plane services (registry and controller) by running the following commands:
 
     ```bash
     kubernetes/run-controlplane-local-k8s.sh start
     ```
 
-1. Run the following command to confirm the control plane is working:
+1.  Confirm the control plane services are working correctly by running the following command:
 
     ```bash
     a8ctl service-list
     ```
 
-    The command shouldn't return any services, since we haven't started any yet, 
-    but if it returns the following empty table, the control plane servers (and CLI) are working as expected:
-    
+    If the control plane services and Amalgam8 CLI are working as expected, the following empty table is returned as output.
+
     ```
     +---------+-----------+
     | Service | Instances |
     +---------+-----------+
     +---------+-----------+
     ```
-    
-    **Note:** If this did not work, it's probabaly because the image download and/or service initialization took too long.
-    This is usually fixed by waiting a minute or two, and then running `kubernetes/run-controlplane-local-k8s.sh stop` and then
-    repeating the previous step.
-    
+
+    Note that no services are listed, because we have not yet started any.
+
+    If the command doesn't work, it's usually because the image download and/or service initialization took too long.
+    You can fix this by waiting a minute or two, then run ```kubernetes/run-controlplane-local-k8s.sh stop```, and then
+    repeat the previous step.
+
     You can also access the registry at http://localhost:31300 from the host machine
-    (outside the Vagrant box), and the controller at http://localhost:31200 .
+    (outside the Vagrant box), and the controller at http://localhost:31200.
     To access the control plane details of tenant *local*, access
     http://localhost:31200/v1/tenants/local from your browser.
 
-1. Run the [API Gateway](http://microservices.io/patterns/apigateway.html) with the following commands:
+1. Run the API Gateway with the following commands:
 
     ```bash
     kubectl create -f kubernetes/gateway.yaml
     ```
-    
+
     Usually, the API gateway is mapped to a DNS route. However, in our local
     standalone environment, you can access it at port 32000 on localhost.
 
 1. Confirm that the API gateway is running by accessing
-    http://localhost:32000 from your browser. If all is well, you should
-    see a simple **Welcome to nginx!** page in your browser.
+    http://localhost:32000 from your browser.
 
-    **Note:** You only need one gateway per tenant. A single gateway can front more
-    than one application under the tenant at the same time, so long as they
-    don't implement any conflicting microservices.
+    If the API gateway is running correctly, the **Welcome to nginx!**
+    page opens in your browser.
 
-1. Visualize your deployment using Weave Scope by accessing
-   http://localhost:30040 . Click on `Pods` tab. You should see a graph of
+1. View a graphical representation of your deployment in [Weave Scope](https://github.com/weaveworks/scope) by accessing
+   http://localhost:30040, and click on `Pods` tab. You should see a graph of
    pods depicting the connectivity between them. As you create more apps
    and manipulate routing across microservices, the graph changes in
    real-time.
-   
+
 1. Follow the instructions for the sample that you want to run.
 
     (a) **helloworld** sample
 
     * Start the helloworld application:
-    
+
         ```bash
         kubectl create -f kubernetes/helloworld.yaml
         ```
-        
+
     * Follow the instructions at https://github.com/amalgam8/examples/blob/master/apps/helloworld/README.md
- 
+
     * To shutdown the helloworld instances, run the following command:
-    
+
         ```bash
         kubectl delete -f kubernetes/helloworld.yaml
         ```
@@ -298,15 +278,15 @@ The following setup has been tested with Kubernetes v1.2.3.
     (b) **bookinfo** sample
 
     * Start the bookinfo application:
-    
+
         ```bash
         kubectl create -f kubernetes/bookinfo.yaml
         ```
 
     * Follow the instructions at https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md
-    
+
     * To shutdown the bookinfo instances, run the following command:
-    
+
         ```bash
         kubectl delete -f kubernetes/bookinfo.yaml
         ```
@@ -319,19 +299,19 @@ The following setup has been tested with Kubernetes v1.2.3.
 
 ## Amalgam8 with Marathon/Mesos - local environment <a id="local-marathon"></a>
 
-The following setup has been tested with Marathon 0.15.2 and Mesos 0.26.0.
+The following setup was tested with Marathon 0.15.2 and Mesos 0.26.0.
 
-1. Clone the Amalgam8 examples repo 
+1. Clone the Amalgam8 examples repo:
     ```bash
     git clone git@github.com:amalgam8/examples.git
-    
+
     cd examples
     ```
 
-1. **Edit the Vagrant file** in the examples folder. Uncomment the line
-starting with `config.vm.network "private_network", ip: "192.168.33.33/24"`.
+1. Edit the Vagrant file in the *examples* folder. Uncomment the line
+that begins with `config.vm.network "private_network", ip: "192.168.33.33/24"`.
 
-1. Start the Vagrant environment
+1. Start the Vagrant environment:
 
     ```bash
     vagrant up
@@ -342,32 +322,32 @@ starting with `config.vm.network "private_network", ip: "192.168.33.33/24"`.
     export A8_REGISTRY_URL=http://192.168.33.33:31300
     ```
 
-1. The `run-controlplane-marathon.sh` script in the `marathon` folder sets up a
+1. The `run-controlplane-marathon.sh` script in the *marathon* folder sets up a
    single host (local) marathon/mesos cluster (based on Holiday Check's
-   [mesos-in-the-box](https://github.com/holidaycheck/mesos-in-the-box))  and launches the controller and the
-   registry as apps in the marathon framework.
-   
+   [mesos-in-the-box](https://github.com/holidaycheck/mesos-in-the-box)), and launches the Amalgam8 control plane (controller and the
+   registry) as apps in the marathon framework.
+
     ```bash
     marathon/run-controlplane-marathon.sh start
     ```
 
-    From your browser, confirm that the Marathon dashboard is accessible at http://192.168.33.33:8080 and the Mesos dashboard at http://192.168.33.33:5050
+2. From your browser, confirm that the Marathon dashboard is accessible at http://192.168.33.33:8080 and the Mesos dashboard at          http://192.168.33.33:5050
 
-    Verify that the controller and registry are running via the Marathon dashboard.
+    Verify that the controller and registry are running by using the Marathon dashboard.
 
 1. Launch the API Gateway
-    
+
     ```bash
     marathon/run-component.sh gateway start
     ```
+    Usually, the API gateway is mapped to a DNS route. However, in our local
+    standalone environment, you can access it at port 32000 on localhost.
 
-1. Confirm that the API gateway is running by accessing the
-    http://localhost:32000 from your browser. If all is well, you should
-    see a simple **Welcome to nginx!** page in your browser.
+1. Confirm that the API gateway is running by accessing
+    http://localhost:32000 from your browser.
 
-    **Note:** You only need one gateway per tenant. A single gateway can front more
-    than one application under the tenant at the same time, so long as they
-    don't implement any conflicting microservices.
+    If the API gateway is running correctly, the **Welcome to nginx!**
+    page opens in your browser.
 
 1. Follow the instructions for the sample that you want to run.
 
@@ -378,11 +358,11 @@ starting with `config.vm.network "private_network", ip: "192.168.33.33/24"`.
     ```bash
     marathon/run-component.sh helloworld start
     ```
-        
+
     * Follow the instructions at https://github.com/amalgam8/examples/blob/master/apps/helloworld/README.md
 
     * To shutdown the helloworld instances, run the following commands:
-   
+
     ```bash
     marathon/run-component.sh helloworld stop
     ```
@@ -390,7 +370,7 @@ starting with `config.vm.network "private_network", ip: "192.168.33.33/24"`.
     (b) **bookinfo** sample
 
     * Start the bookinfo application:
-    
+
     ```bash
     marathon/run-component.sh bookinfo start
     ```
@@ -398,7 +378,7 @@ starting with `config.vm.network "private_network", ip: "192.168.33.33/24"`.
     * Follow the instructions at https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md
 
     * To shutdown the bookinfo instances, run the following commands:
-    
+
     ```bash
     marathon/run-component.sh bookinfo stop
     ```
@@ -412,8 +392,9 @@ starting with `config.vm.network "private_network", ip: "192.168.33.33/24"`.
 ## Amalgam8 on IBM Bluemix <a id="bluemix"></a>
 
 To run the [Bookinfo sample app](https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md)
-on Bluemix, follow the instructions below.
-If you are not a bluemix user, you can register at [bluemix.net](http://bluemix.net/).
+on Bluemix, follow the steps below.
+
+If you are not a bluemix user, register a user account at [bluemix.net](http://bluemix.net/).
 
 1. Download [Docker 1.10 or later](https://docs.docker.com/engine/installation/),
     [CF CLI 6.12.0 or later](https://github.com/cloudfoundry/cli/releases),
@@ -421,43 +402,44 @@ If you are not a bluemix user, you can register at [bluemix.net](http://bluemix.
     [jq 1.5 or later](https://stedolan.github.io/jq/),
     and the [Amalgam8 CLI](https://pypi.python.org/pypi/a8ctl)
 
-1. Login to Bluemix and initialize the containers environment using ```cf login``` and ```cf ic init```
+1. Log in to Bluemix and initialize the containers environment by using the CF CLI commands ```cf login``` and ```cf ic init```.
 
-1. Create Bluemix routes to be mapped to the controller/bookinfo gateway, e.g.:  
+1. Create Bluemix routes to be mapped to the controller/bookinfo gateway. For example:  
     ```cf create-route myspace mybluemix.net -n myamalgam8-controller```  
     ```cf create-route myspace mybluemix.net -n myamalgam8-bookinfo```
-    
-1. Configure the [.bluemixrc file](bluemix/.bluemixrc) to your environment variable values
-    * BLUEMIX_REGISTRY_NAMESPACE should be your Bluemix registry namespace, e.g. ```cf ic namespace get```
-    * BLUEMIX_REGISTRY_HOST should be the Bluemix registry hostname. This needs to be set only if you're targeting a Bluemix region other than US-South.
-    * CONTROLLER_HOSTNAME should be the (globally unique) Bluemix route to be mapped to the controller
-    * BOOKINFO_ROUTE should be the (globally unique) Bluemix route to be mapped to the bookinfo gateway
-    * ROUTES_DOMAIN should be the domain used for the Bluemix routes (e.g., mybluemix.net)
-    * ENABLE_SERVICEDISCOVERY determines whether to use the Bluemix-provided [Service Discovery](https://console.ng.bluemix.net/docs/services/ServiceDiscovery/index.html)
-      instead of the A8 registry. When set to false, you can deploy your own customized A8 registry (not yet implemented).
-    * ENABLE_MESSAGEHUB determines whether to use the Bluemix-provided [Message Hub](https://console.ng.bluemix.net/docs/services/MessageHub/index.html#messagehub).
-      When set to false, the A8 proxies will use a slower polling algorithm to get changes from the A8 Controller.  
-      Note that the Message Hub Bluemix service is not a free service, and using it might incur costs.
 
-1. Deploy the A8 controlplane by running [bluemix/deploy-controlplane.sh](bluemix/deploy-controlplane.sh).
-    Verify that the controller is running by ```cf ic group list``` and checking if the ```amalgam8_controller``` group is running.
+1. Configure the [.bluemixrc file](bluemix/.bluemixrc) to your environment variable values:
+    * BLUEMIX_REGISTRY_NAMESPACE to your Bluemix registry namespace. Run ```cf ic namespace get``` for the namespace value.
+    * BLUEMIX_REGISTRY_HOST to the Bluemix registry hostname. Set this if you're targeting a Bluemix region that is not US-South.
+    * CONTROLLER_HOSTNAME to the (globally unique) Bluemix route to be mapped to the controller.
+    * BOOKINFO_ROUTE to the (globally unique) Bluemix route to be mapped to the bookinfo gateway.
+    * ROUTES_DOMAIN to the domain that is used for the Bluemix routes (for example, mybluemix.net).
+    * ENABLE_SERVICEDISCOVERY specifies whether to use the Bluemix-provided [IBM Service Discovery](https://console.ng.bluemix.net/docs/services/ServiceDiscovery/index.html)
+      registry instead of the Amalgam8 registry. When set to *false*, you can deploy your own customized Amalgam8 registry (not yet implemented).
+    * ENABLE_MESSAGEHUB determines whether to use the Bluemix-provided [IBM Message Hub](https://console.ng.bluemix.net/docs/services/MessageHub/index.html#messagehub).
+      When set to false, the Amalgam8 proxies use a slower polling algorithm to get changes from the Amalgam8 Controller.  
+      Note that the Message Hub service is not a free service, and using it might incur costs.
 
-1. Configure the Amalgam8 CLI according to the routes defined in
-   [.bluemixrc file](bluemix/.bluemixrc). For example
+1. Deploy the Amalgam8 control plane by running [bluemix/deploy-controlplane.sh](bluemix/deploy-controlplane.sh).
+
+1. Verify that the controller is running by running the CF  ```cf ic group list```, and checking if the ```amalgam8_controller``` group is running.
+
+1. Configure the Amalgam8 CLI according to the routes that are defined in
+   [.bluemixrc file](bluemix/.bluemixrc). For example:
 
     ```
     export A8_CONTROLLER_URL=https://mya8controller.mybluemix.net
     ```
 
-1. Run the following command to confirm the control plane is working:
+
+ 1.  Confirm the control plane services are working correctly by running the following command:
 
     ```bash
     a8ctl service-list
     ```
 
-    The command shouldn't return any services, since we haven't started any yet, 
-    but if it returns the following empty table, the control plane servers (and CLI) are working as expected:
-    
+    If the control plane services and Amalgam8 CLI are working as expected, the following empty table is returned as output.
+
     ```
     +---------+-----------+
     | Service | Instances |
@@ -465,17 +447,19 @@ If you are not a bluemix user, you can register at [bluemix.net](http://bluemix.
     +---------+-----------+
     ```
 
-1. Deploy the API Gateway and the Bookinfo app by running [bluemix/deploy-bookinfo.sh](bluemix/deploy-bookinfo.sh)
+   Note that no services are listed, because we have not yet started any.
+
+1. Deploy the API Gateway and the Bookinfo app by running [bluemix/deploy-bookinfo.sh](bluemix/deploy-bookinfo.sh).
 
 
-1. Confirm the microservices are running
+1. Confirm the microservices are running:
 
     ```
     a8ctl service-list
     ```
-    
-    Should produce the following output:
-    
+
+    If the microservices are running, the output displays as the following table:
+
     ```
     +-------------+---------------------+
     | Service     | Instances           |
@@ -488,6 +472,7 @@ If you are not a bluemix user, you can register at [bluemix.net](http://bluemix.
      ```
 
 1. Follow the [Bookinfo sample app](https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md) instructions for the rest of the demo.
+
     When you reach the part where it instructs you to open, in your browser, the bookinfo application at
     http://localhost:32000/productpage/productpage, make sure to change "http://localhost:32000" to the value of the `BOOKINFO_URL`
     environment variable that you defined in your `.bluemixrc` file.
@@ -503,18 +488,18 @@ If you are not a bluemix user, you can register at [bluemix.net](http://bluemix.
 
 ## Amalgam8 on Google Cloud Platform <a id="gcp"></a>
 
-1. Setup [Google Cloud SDK](https://cloud.google.com/sdk/) on your machine
+1. Set up [Google Cloud SDK](https://cloud.google.com/sdk/) on your machine.
 
-1. Setup a cluster of 3 nodes
+1. Set up a cluster of 3 nodes.
 
-1. Launch the control plane services
+1. Launch the control plane services:
 
     ```bash
     kubernetes/run-controlplane-gcp.sh start
     ```
 
-1. Locate the node where the controller is running and assign an
-   external IP to the node if needed
+1. Locate the node where the controller is running, and assign an
+   external IP to the node if required.
 
 1. Initialize the first tenant. The `run-controlplane-gcp.sh` script stores
    the JSON payload to initialize the tenant in `/tmp/tenant_details.json`.
@@ -523,7 +508,7 @@ If you are not a bluemix user, you can register at [bluemix.net](http://bluemix.
     cat /tmp/tenant_details.json|curl -H "Content-Type: application/json" -d @- http://ControllerExternalIP:31200/v1/tenants
     ```
 
-1. Deploy the API gateway
+1. Deploy the API gateway:
 
     ```bash
     kubectl create -f kubernetes/gateway.yaml
@@ -537,17 +522,17 @@ If you are not a bluemix user, you can register at [bluemix.net](http://bluemix.
     with the public IP address of the node where the gateway service is
     running on the Google Cloud Platform.
 
-1. Visualizing your deployment with Weave Scope
+1. View a graphical representation of your deployment in [Weave Scope](https://github.com/weaveworks/scope):
 
     ```bash
     kubectl create -f 'https://scope.weave.works/launch/k8s/weavescope.yaml' --validate=false
     ```
 
-    Once weavescope is up and running, you can view the weavescope dashboard
-    on your local host using the following commands
-  
+    When weavescope is running, you can view the weavescope dashboard
+    on your local host by using the following commands:
+
     ```bash
     kubectl port-forward $(kubectl get pod --selector=weavescope-component=weavescope-app -o jsonpath={.items..metadata.name}) 4040
     ```
-  
+
     You can open http://localhost:4040 on your browser to access the Scope UI.
