@@ -2,7 +2,7 @@
 
 ## Overview
 
-The helloworld sample starts two versions of a helloworld microservice, to demonstrate how Amalgam8 can be used to split 
+The helloworld sample starts two versions of a helloworld microservice, to demonstrate how Amalgam8 can be used to split
 incoming traffic between the two versions. You can define the proportion of traffic to each microservice as a percentage.
 
 ## Running the helloworld sample
@@ -14,9 +14,9 @@ Before you begin, follow the environment set up instructions at https://github.c
     ```bash
     a8ctl service-list
     ```
-    
+
     The expected output is the following table:
-    
+
     ```
     +------------+--------------+
     | Service    | Instances    |
@@ -25,9 +25,9 @@ Before you begin, follow the environment set up instructions at https://github.c
     +------------+--------------+
     ```
 
-    There are 4 instances of the helloworld service. 2 are instances of version "v1" and 2 are version "v2". 
+    There are 4 instances of the helloworld service. 2 are instances of version "v1" and 2 are version "v2".
 
-1. Send all traffic to the v1 version of helloworld, by running the following command:
+1. Send all traffic to the v1 version of helloworld by running the following command:
 
     ```
     a8ctl route-set helloworld --default v1
@@ -72,10 +72,10 @@ Before you begin, follow the environment set up instructions at https://github.c
     ...
     ```
 
-Next, split traffic so thart it is routed between both helloworld v1 and helloworld v2.
+Next, split traffic so that it is routed between both helloworld v1 and helloworld v2.
 
 1. Run the following command to send 25% of the traffic to helloworld v2, leaving the rest (75%) on v1:
-    
+
     ```
     a8ctl route-set helloworld --default v1 --selector 'v2(weight=0.25)'
     ```
@@ -101,7 +101,7 @@ Next, split traffic so thart it is routed between both helloworld v1 and hellowo
     ...
     ```
 
-    Note: if you use a browser instead of cURL to access the service and continually refresh the page, 
+    Note: if you use a browser instead of cURL to access the service and continually refresh the page,
     it will always return the same version (v1 or v2), because a cookie is set to maintain version affinity.
     However, the browser still round-robins between the specific version instances that it returns.
 
@@ -181,7 +181,7 @@ The returned output resembles this following example:
 }
 ```
 
-2. List the routes for a service by running the following cURL command:
+1. List the routes for a service by running the following cURL command:
 
 ```
 curl http://localhost:31200/v1/tenants/local/versions/helloworld | jq .
@@ -200,7 +200,7 @@ After following the sample steps, the following output is displayed:
 }
 ```
 
-3. Try setting the microservice routing by using the Amalgam8 REST API. For example, to send all traffic to v2, run the following cURL command:
+1. Try setting the microservice routing by using the Amalgam8 REST API. For example, to send all traffic to v2, run the following cURL command:
 
 ```
 curl -X PUT http://localhost:31200/v1/tenants/local/versions/helloworld -d '{"default": "v2"}' -H "Content-Type: application/json"
